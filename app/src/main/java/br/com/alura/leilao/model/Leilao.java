@@ -32,15 +32,25 @@ public class Leilao implements Serializable {
 
     public void propoe(Lance lance) {
         final double valorLance = lance.getValor();
-        if(maiorLance > valorLance){
+        if (maiorLance > valorLance) {
             return;
         }
-        if(!lances.isEmpty())
-        {
-            Usuario usuarioNovo = lance.getUsuario();
+        if (!lances.isEmpty()) {
+            Usuario novoUsuario = lance.getUsuario();
             Usuario ultimoUsuario = lances.get(0).getUsuario();
-            if(usuarioNovo.equals(ultimoUsuario)){
+            if (novoUsuario.equals(ultimoUsuario)) {
                 return;
+            }
+            int lancesDoUsuario = 0;
+            for (Lance l : lances
+            ) {
+                final Usuario usuarioExistente = l.getUsuario();
+                if(usuarioExistente.equals(novoUsuario)){
+                    lancesDoUsuario++;
+                    if(lancesDoUsuario == 5){
+                        return;
+                    }
+                }
             }
         }
         lances.add(lance);
