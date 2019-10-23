@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import br.com.alura.leilao.exception.LanceMenorQueOUltimoLanceException;
+import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
+import br.com.alura.leilao.exception.UsuarioJaDeuCincoLancesException;
+
 public class Leilao implements Serializable {
 
     private final String descricao;
@@ -51,13 +55,13 @@ public class Leilao implements Serializable {
     private boolean lanceNaoValido(Lance lance) {
         final double valorLance = lance.getValor();
         if (lanceForMenorQueUltimoLance(valorLance))
-            throw new RuntimeException("Lance foi menor que maior lance");
+            throw new LanceMenorQueOUltimoLanceException();
         if (temLances()) {
             Usuario novoUsuario = lance.getUsuario();
             if (usuarioForOMesmoUltimoLance(novoUsuario))
-                throw new RuntimeException("Mesmo usuário do ultimo lance");
+                throw new LanceSeguidoDoMesmoUsuarioException();
             if (usuarioDeuCincoLances(novoUsuario))
-                throw new RuntimeException("Usuário já deu cinco lances");
+                throw new UsuarioJaDeuCincoLancesException();
         }
         return false;
     }
