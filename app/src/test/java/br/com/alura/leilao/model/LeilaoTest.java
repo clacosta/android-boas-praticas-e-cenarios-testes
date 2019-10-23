@@ -122,43 +122,47 @@ public class LeilaoTest {
     }
 
     @Test
-    public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
+    public void deve_LancarException_QuandoReceberLanceMenorQueMaiorLance() {
         CONSOLE.propoe(new Lance(ALEX, 500.0));
         try {
             CONSOLE.propoe(new Lance(FRAN, 400.0));
             fail("Era esperado uma RuntimeException");
-        }
-        catch (RuntimeException ex){
-            //Teste passou
+        } catch (RuntimeException exception) {
+            assertEquals("Lance foi menor que maior lance", exception.getMessage());
         }
     }
 
     @Test
-    public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance() {
+    public void deve_LancarException_QuandoForOMesmoUsuarioDoUltimoLance() {
         CONSOLE.propoe(new Lance(ALEX, 500.0));
-        CONSOLE.propoe(new Lance(new Usuario("Alex"), 600.0));
-        int quantidadeDeLances = CONSOLE.quantidadeDeLances();
-        assertEquals(1, quantidadeDeLances);
+        try {
+            CONSOLE.propoe(new Lance(new Usuario("Alex"), 600.0));
+            fail("Era esperado uma RuntimeException");
+        } catch (RuntimeException exception) {
+            assertEquals("Mesmo usuário do ultimo lance", exception.getMessage());
+        }
     }
 
     @Test
-    public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
-        final Leilao console = new LeilaoBuilder("Console")
-                .lance(ALEX, 100.0)
-                .lance(FRAN, 200.0)
-                .lance(ALEX, 300.0)
-                .lance(FRAN, 400.0)
-                .lance(ALEX, 500.0)
-                .lance(FRAN, 600.0)
-                .lance(ALEX, 700.0)
-                .lance(FRAN, 800.0)
-                .lance(ALEX, 900.0)
-                .lance(FRAN, 1000.0)
-                .lance(ALEX, 1100.0)
-                .lance(FRAN, 1200.0)
-                .build();
-        int quantidadeDeLances = console.quantidadeDeLances();
-        assertEquals(10, quantidadeDeLances);
+    public void deve_LancarException_QuandoUsuarioDerMaisDeCincoLances() {
+        try {
+            final Leilao console = new LeilaoBuilder("Console")
+                    .lance(ALEX, 100.0)
+                    .lance(FRAN, 200.0)
+                    .lance(ALEX, 300.0)
+                    .lance(FRAN, 400.0)
+                    .lance(ALEX, 500.0)
+                    .lance(FRAN, 600.0)
+                    .lance(ALEX, 700.0)
+                    .lance(FRAN, 800.0)
+                    .lance(ALEX, 900.0)
+                    .lance(FRAN, 1000.0)
+                    .lance(ALEX, 1100.0)
+                    .build();
+            fail("Era esperado uma RuntimeException");
+        } catch (RuntimeException exception) {
+            assertEquals("Usuário já deu cinco lances", exception.getMessage());
+        }
     }
 
 }
