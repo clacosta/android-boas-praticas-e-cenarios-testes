@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.alura.leilao.builder.LeilaoBuilder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class LeilaoTest {
 
@@ -36,14 +37,6 @@ public class LeilaoTest {
         CONSOLE.propoe(new Lance(FRAN, 200.0));
         double maiorLance = CONSOLE.getMaiorLance();
         assertEquals(200.0, maiorLance, DELTA);
-    }
-
-    @Test
-    public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        CONSOLE.propoe(new Lance(ALEX, 10000.00));
-        CONSOLE.propoe(new Lance(FRAN, 9000.00));
-        double maiorLance = CONSOLE.getMaiorLance();
-        assertEquals(10000.00, maiorLance, DELTA);
     }
 
     @Test
@@ -131,9 +124,13 @@ public class LeilaoTest {
     @Test
     public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
         CONSOLE.propoe(new Lance(ALEX, 500.0));
-        CONSOLE.propoe(new Lance(FRAN, 400.0));
-        int quantidadeDeLances = CONSOLE.quantidadeDeLances();
-        assertEquals(1, quantidadeDeLances);
+        try {
+            CONSOLE.propoe(new Lance(FRAN, 400.0));
+            fail("Era esperado uma RuntimeException");
+        }
+        catch (RuntimeException ex){
+            //Teste passou
+        }
     }
 
     @Test
